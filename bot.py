@@ -5,7 +5,8 @@ from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 # =======================
 # Получаем токен и прокси из Railway Secrets
 # =======================
-TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
+import os
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 PROXY = os.environ.get("PROXY")  # например: "socks5://IP:PORT", оставь пустым если не нужен
 
 # =======================
