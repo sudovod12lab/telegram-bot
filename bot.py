@@ -1,20 +1,17 @@
 import os
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
-from telegram.request import HTTPXRequest
 
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 
-# ✅ MTProto прокси (HTTP)
-request = HTTPXRequest(
-    proxy_url="http://proxy.mtproto.me:443"
-)
+# ✅ Рабочий SOCKS5
+PROXY = "socks5://103.149.162.195:80"
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print("Получен /start")
     await update.message.reply_text("Привет! 🤖 Я жив!")
 
-app = ApplicationBuilder().token(TELEGRAM_TOKEN).request(request).build()
+app = ApplicationBuilder().token(TELEGRAM_TOKEN).proxy_url(PROXY).build()
 
 app.add_handler(CommandHandler("start", start))
 
