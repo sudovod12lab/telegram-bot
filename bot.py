@@ -1,40 +1,22 @@
 import os
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+from telegram.request import HTTPXRequest
 
-# =======================
-# Получаем токен и прокси из Railway Secrets
-# =======================
-import os
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
-PROXY = os.environ.get("PROXY")  # например: "socks5://IP:PORT", оставь пустым если не нужен
 
-# =======================
-# Команда /start
-# =======================
+# ✅ MTProto прокси (HTTP)
+request = HTTPXRequest(
+    proxy_url="http://proxy.mtproto.me:443"
+)
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text(
-        "Привет! 🤖\nЯ твой бот. Напиши задание, и я помогу его решить!"
-    )
+    print("Получен /start")
+    await update.message.reply_text("Привет! 🤖 Я жив!")
 
-# =======================
-# Создание приложения бота
-# =======================
-builder = ApplicationBuilder().token(TELEGRAM_TOKEN)
+app = ApplicationBuilder().token(TELEGRAM_TOKEN).request(request).build()
 
-if PROXY:
-    builder = builder.proxy_url(PROXY)
-
-app = builder.build()
-
-# Добавляем обработчик команды /start
 app.add_handler(CommandHandler("start", start))
 
-# =======================
-# Запуск бота
-# =======================
 print("Бот запущен...")
-try:
-    app.run_polling()
-except Exception as e:
-    print("Ошибка при запуске бота:", e)
+app.run_polling()
